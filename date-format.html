@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CrossKnowledge - Code challenge - Date Format</title>
+</head>
+<body>
+  <script>
+    async function jsDateFormat () {
+
+      let elements = document.querySelectorAll('.js-date-format')
+      let elementsArray = Array.prototype.slice.call(elements)
+      let now = new Date
+
+      const second = 1000
+      const minute = second * 60
+      const hour = minute * 60
+
+      elementsArray.map(el => {
+
+          let createdAt = new Date(el.getAttribute('data-createdAt'))
+          let difference = now.getTime() - createdAt.getTime()
+
+          let cSeconds = 0
+          let cMinutes = 0
+          let cHours = 0
+
+          let format = ''
+
+          if (difference >= hour) {
+            cHours = Math.floor(difference/hour)
+            difference -= cHours * hour
+            format += cHours + ' hour' + (cHours > 1 ? 's' : '') + ', '
+          }
+
+          if (difference >= minute) {
+            cMinutes = Math.floor(difference/minute)
+            difference -= cMinutes * minute
+            format += cMinutes + ' minute' + (cMinutes > 1 ? 's' : '') + ', '
+          }
+
+          cSeconds = Math.floor(difference/second)
+          format += cSeconds + ' second' + (cSeconds > 1 ? 's' : '') + ' ago'
+
+          el.innerHTML = format
+
+          console.log('Past ' + difference + ' milliseconds are ' + format)
+      });
+    }
+  </script>
+  <script>
+    // This will create elements for testing every second
+    (
+      () => {
+        let elementsCount = 100
+        for (i = 0; i < elementsCount; i++) {
+          setTimeout(() => {
+            let el = document.createElement("div")
+            let now = (new Date()).toISOString();
+            el.className = 'js-date-format'
+            el.innerHTML = now
+            el.setAttribute('data-createdAt', now)
+            document.body.appendChild(el)
+            jsDateFormat()
+          }, i * 1000)
+        }
+      }
+    )();
+  </script>
+</body>
+</html>
